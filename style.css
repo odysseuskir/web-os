@@ -16,14 +16,14 @@ body {
     transform: translate(-50%, -50%);
     background-color: gray;
     color: white;
-    display: none; /* Start hidden */
-    flex-direction: column; /* Ensure content stacks vertically */
-    overflow: hidden; /* Prevent overflow */
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .windowContent {
-    overflow-y: auto; /* Enable vertical scrolling if needed */
-    padding: 16px; /* Add padding to content */
+    overflow-y: auto;
+    padding: 16px;
 }
 
 #navbar {
@@ -56,8 +56,8 @@ body {
     display: flex; 
     align-items: center; 
     cursor: move;
-    justify-content: space-between; /* Spread title and close button */
-    padding: 8px; /* Add padding to header */
+    justify-content: space-between;
+    padding: 8px;
 }
 
 .windowHeader p {
