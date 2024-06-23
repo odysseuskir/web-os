@@ -1,90 +1,68 @@
-function updateTime() {
-    var currentTime = new Date().toLocaleString();
-    var timeText = document.querySelector("#time");
-    timeText.innerHTML = currentTime;
-}
+document.addEventListener("DOMContentLoaded", () => {
+  // Show the welcome screen when the page loads
+  document.getElementById("welcomeScreen").style.display = "flex";
 
-setInterval(updateTime, 1000);
-
-dragElement(document.getElementById("welcome-screen"));
-
-function dragElement(element) {
-  var initialX = 0;
-  var initialY = 0;
-  var currentX = 0;
-  var currentY = 0;
-
-  if (document.getElementById(element.id + "header")) {
-    document.getElementById(element.id + "header").onmousedown = startDragging;
-  } else {
-    element.onmousedown = startDragging;
+  // Function to update the time
+  function updateTime() {
+      const currentTime = new Date().toLocaleTimeString();
+      document.getElementById("time").innerText = currentTime;
   }
 
-  function startDragging(e) {
-    e = e || window.event;
-    e.preventDefault();
-    initialX = e.clientX;
-    initialY = e.clientY;
-    document.onmouseup = stopDragging;
-    document.onmousemove = dragElement;
+  // Update the time every second
+  setInterval(updateTime, 1000);
+  updateTime();  // Initial call to display the time immediately on load
+
+  // Function to make the element draggable
+  function makeElementDraggable(elmnt) {
+      let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+      if (elmnt.querySelector(".windowHeader")) {
+          elmnt.querySelector(".windowHeader").onmousedown = dragMouseDown;
+      } else {
+          elmnt.onmousedown = dragMouseDown;
+      }
+
+      function dragMouseDown(e) {
+          e = e || window.event;
+          e.preventDefault();
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+          document.onmouseup = closeDragElement;
+          document.onmousemove = elementDrag;
+      }
+
+      function elementDrag(e) {
+          e = e || window.event;
+          e.preventDefault();
+          pos1 = pos3 - e.clientX;
+          pos2 = pos4 - e.clientY;
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+          elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+          elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+      }
+
+      function closeDragElement() {
+          document.onmouseup = null;
+          document.onmousemove = null;
+      }
   }
 
-  function dragElement(e) {
-    e = e || window.event;
-    e.preventDefault();
-    currentX = initialX - e.clientX;
-    currentY = initialY - e.clientY;
-    initialX = e.clientX;
-    initialY = e.clientY;
-    element.style.top = (element.offsetTop - currentY) + "px";
-    element.style.left = (element.offsetLeft - currentX) + "px";
+  // Make the windows draggable
+  makeElementDraggable(document.getElementById("welcomeScreen"));
+  makeElementDraggable(document.getElementById("educationScreen"));
+
+  // Handle close buttons
+  document.getElementById("welcomeClose").onclick = function() {
+      document.getElementById("welcomeScreen").style.display = "none";
   }
 
-  function stopDragging() {
-    document.onmouseup = null;
-    document.onmousemove = null;
+  document.getElementById("educationClose").onclick = function() {
+      document.getElementById("educationScreen").style.display = "none";
   }
-}
 
-var welcomeScreen = document.querySelector("#welcome-screen");
-
-function closeWindow(element) {
-  element.style.display = "none"
-}
-
-function openWindow(element) {
-  element.style.display = "flex"
-}
-
-var welcomeScreenClose = document.querySelector("#welcomeclose")
-
-var welcomeScreenOpen = document.querySelector("#welcomeopen")
-
-welcomeScreenClose.addEventListener("click", function() {
-  closeWindow(welcomeScreen);
+  // Handle education icon click to show education screen
+  document.getElementById("education").onclick = function() {
+      document.getElementById("educationScreen").style.display = "flex";
+  }
 });
-
-welcomeScreenOpen.addEventListener("click", function() {
-  openWindow(welcomeScreen);
-});
-
-var selectedIcon = undefined
-
-function selectIcon(element) {
-  element.classList.add("selected");
-  selectedIcon = element
-} 
-
-function deselectIcon(element) {
-  element.classList.remove("selected");
-  selectedIcon = undefined
-}
-
-function handleIconTap(element) {
-  if (element.classList.contains("selected")) {
-    deselectIcon(element)
-    openWindow(window)
-  } else {
-    selectIcon(element)
-  }
-}
